@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="https://www.springframework.org/schema/beans"
+       xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="https://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="https://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/jee
+        http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+		https://www.springframework.org/schema/aop
+		https://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		https://www.springframework.org/schema/tx
+		https://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/bankdb"/>
+        <property name="username" value="root"/>
+        <property name="password" value=""/>
+    </bean>
+    <!-- Hibernate 3 XML SessionFactory Bean definition-->
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="hibernateProperties">
+            <value>
+                hibernate.dialect=org.hibernate.dialect.MySQLDialect
+            </value>
+        </property>
+    </bean>
+    <context:annotation-config />
+    <context:component-scan base-package="java" />
+    <!-- Allows us to configure transaction via annotations -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+    <!-- Configures the connection to our datasource -->
+    <bean id="userDao" class="dao.UserDAOImpl" />
+    <bean id="datasource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="dataSource" ref="datasource" />
+    </bean>
+</beans>
